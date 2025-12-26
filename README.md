@@ -4,6 +4,12 @@
 
 This is a comprehensive e-commerce mobile application built with Flutter, providing a complete shopping experience with features including product browsing, cart management, wishlist, order tracking, and user authentication. The application follows clean architecture principles and integrates with a custom backend API and admin dashboard.
 
+### Demo Video
+
+Watch the application demo:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/31HGsFuumOs?si=G0Bahj61bGAuiUGm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Team Members
 
 - **Mohamed Osama Mohamed** - ID: 2305180
