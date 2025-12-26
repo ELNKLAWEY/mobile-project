@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Handle API requests - route all /api/v1/* requests to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/v1/(.*)$ index.php [QSA,L]
+
+# If accessing root, redirect to API
+RewriteRule ^$ index.php [L]
+

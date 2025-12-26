@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation & Testing - E-commerce Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .token-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .token-section input {
+            width: 70%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .token-section button {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .token-section button:hover {
+            background: #5568d3;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            background: white;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .api-section {
+            display: none;
+        }
+
+        .api-section.active {
+            display: block;
+        }
+
+        .api-endpoint {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+
+        .api-endpoint:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .method {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+        }
+
+        .method.get { background: #28a745; }
+        .method.post { background: #007bff; }
+        .method.patch { background: #ffc107; color: #000; }
+        .method.delete { background: #dc3545; }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        .endpoint-access {
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .endpoint-access.public { background: #d4edda; color: #155724; }
+        .endpoint-access.user { background: #cce5ff; color: #004085; }
+        .endpoint-access.admin { background: #f8d7da; color: #721c24; }
+
+        .endpoint-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-test {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-test:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .response-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .response-section.show {
+            display: block;
+        }
+
+        .response-section pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .status-success { color: #4ec9b0; }
+        .status-error { color: #f48771; }
+
+        .query-params {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .query-params {
+                grid-template-columns: 1fr;
+            }
+            
+            .token-section input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ E-commerce API Documentation</h1>
+            <p>Test & Explore All API Endpoints</p>
+        </div>
+
+        <div class="token-section">
+            <input type="text" id="tokenInput" placeholder="Enter JWT Token (will be saved automatically)">
+            <button onclick="saveToken()">Save Token</button>
+            <button onclick="clearToken()" style="background: #dc3545; margin-left: 10px;">Clear Token</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('auth')">Authentication</button>
+            <button class="tab" onclick="showSection('users')">Users</button>
+            <button class="tab" onclick="showSection('products')">Products</button>
+            <button class="tab" onclick="showSection('brands')">Brands</button>
+            <button class="tab" onclick="showSection('ratings')">Ratings</button>
+            <button class="tab" onclick="showSection('cart')">Cart</button>
+            <button class="tab" onclick="showSection('favorites')">Favorites</button>
+            <button class="tab" onclick="showSection('orders')">Orders</button>
+        </div>
+
+        <div class="content">
+            <!-- Auth Section -->
+            <div id="auth" class="api-section active">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/auth/register</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Register a new user account</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="register-name" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="register-email" placeholder="user@example.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="register-password" placeholder="password123">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone (optional)</label>
+                            <input type="text" id="register-phone" placeholder="01234567890">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address (optional)</label>
+                        <textarea id="register-address" placeholder="123 Main Street, Cairo"></textarea>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/auth/register', {
+                        name: document.getElementById('register-name').value,
+                        email: document.getElementById('register-email').value,
+                        password: document.getElementById('register-password').value,
+                        phone: document.getElementById('register-phone').value || undefined,
+                        address: document.getElementById('register-address').value || undefined
+                    }, 'register-response')">Test Register</button>
+                    <div id="register-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/auth/login</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">User login</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="login-email" placeholder="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="login-password" placeholder="password123">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/auth/login', {
+                        email: document.getElementById('login-email').value,
+                        password: document.getElementById('login-password').value
+                    }, 'login-response', true)">Test Login</button>
+                    <div id="login-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/auth/admin/login</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Admin login only</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="admin-login-email" placeholder="admin@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="admin-login-password" placeholder="password123">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/auth/admin/login', {
+                        email: document.getElementById('admin-login-email').value,
+                        password: document.getElementById('admin-login-password').value
+                    }, 'admin-login-response', true)">Test Admin Login</button>
+                    <div id="admin-login-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/auth/me</span>
+                        <span class="endpoint-access user">Auth Required</span>
+                    </div>
+                    <div class="endpoint-description">Get current user information</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/auth/me', null, 'me-response')">Test Get Me</button>
+                    <div id="me-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/auth/refresh</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Refresh access token</div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/auth/refresh', null, 'refresh-response', true)">Test Refresh Token</button>
+                    <div id="refresh-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/auth/password/reset/request</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Request password reset (sends OTP via SMS)</div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="reset-request-email" placeholder="user@example.com">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/auth/password/reset/request', {
+                        email: document.getElementById('reset-request-email').value
+                    }, 'reset-request-response')">Test Request Reset</button>
+                    <div id="reset-request-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/auth/password/reset</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Reset password using OTP</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="reset-email" placeholder="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>OTP (4 digits)</label>
+                            <input type="text" id="reset-otp" placeholder="1234" maxlength="4">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="reset-new-password" placeholder="newpassword123">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/auth/password/reset', {
+                        email: document.getElementById('reset-email').value,
+                        otp: document.getElementById('reset-otp').value,
+                        new_password: document.getElementById('reset-new-password').value
+                    }, 'reset-response')">Test Reset Password</button>
+                    <div id="reset-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="users" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/users</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Get all users</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/users', null, 'users-list-response')">Test Get All Users</button>
+                    <div id="users-list-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/users/{id}</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Get user by ID</div>
+                    <div class="form-group">
+                        <label>User ID</label>
+                        <input type="number" id="user-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/users/' + document.getElementById('user-id').value, null, 'user-get-response')">Test Get User</button>
+                    <div id="user-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/v1/users/{id}</span>
+                        <span class="endpoint-access user">Self or Admin</span>
+                    </div>
+                    <div class="endpoint-description">Update user</div>
+                    <div class="form-group">
+                        <label>User ID</label>
+                        <input type="number" id="user-update-id" placeholder="1">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name (optional)</label>
+                            <input type="text" id="user-update-name" placeholder="New Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email (optional)</label>
+                            <input type="email" id="user-update-email" placeholder="new@example.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Password (optional)</label>
+                            <input type="password" id="user-update-password" placeholder="New Password">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone (optional)</label>
+                            <input type="text" id="user-update-phone" placeholder="01234567890">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Address (optional)</label>
+                        <textarea id="user-update-address" placeholder="New Address"></textarea>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('PATCH', '/api/v1/users/' + document.getElementById('user-update-id').value, {
+                        name: document.getElementById('user-update-name').value || undefined,
+                        email: document.getElementById('user-update-email').value || undefined,
+                        password: document.getElementById('user-update-password').value || undefined,
+                        phone: document.getElementById('user-update-phone').value || undefined,
+                        address: document.getElementById('user-update-address').value || undefined
+                    }, 'user-update-response')">Test Update User</button>
+                    <div id="user-update-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="products" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/products</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Get all products with filters</div>
+                    <div class="query-params">
+                        <div class="form-group">
+                            <label>Search</label>
+                            <input type="text" id="products-search" placeholder="Search term">
+                        </div>
+                        <div class="form-group">
+                            <label>Min Price</label>
+                            <input type="number" id="products-min-price" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Price</label>
+                            <input type="number" id="products-max-price" placeholder="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Page</label>
+                            <input type="number" id="products-page" placeholder="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Limit</label>
+                            <input type="number" id="products-limit" placeholder="20" value="20">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/products?' + buildQueryString({
+                        search: document.getElementById('products-search').value,
+                        min_price: document.getElementById('products-min-price').value,
+                        max_price: document.getElementById('products-max-price').value,
+                        page: document.getElementById('products-page').value,
+                        limit: document.getElementById('products-limit').value
+                    }), null, 'products-list-response')">Test Get Products</button>
+                    <div id="products-list-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/products/{id}</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Get product by ID</div>
+                    <div class="form-group">
+                        <label>Product ID</label>
+                        <input type="number" id="product-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/products/' + document.getElementById('product-id').value, null, 'product-get-response')">Test Get Product</button>
+                    <div id="product-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/products</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Create new product</div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="product-create-title" placeholder="Product Title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="product-create-description" placeholder="Product Description"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" step="0.01" id="product-create-price" placeholder="99.99">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock</label>
+                            <input type="number" id="product-create-stock" placeholder="100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Brand ID (optional)</label>
+                            <input type="number" id="product-create-brand-id" placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" id="product-create-image" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/products', {
+                        title: document.getElementById('product-create-title').value,
+                        description: document.getElementById('product-create-description').value,
+                        price: parseFloat(document.getElementById('product-create-price').value),
+                        stock: parseInt(document.getElementById('product-create-stock').value),
+                        brand_id: document.getElementById('product-create-brand-id').value ? parseInt(document.getElementById('product-create-brand-id').value) : undefined,
+                        image: document.getElementById('product-create-image').value
+                    }, 'product-create-response')">Test Create Product</button>
+                    <div id="product-create-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Cart Section -->
+            <div id="cart" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/cart</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Get cart items</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/cart', null, 'cart-get-response')">Test Get Cart</button>
+                    <div id="cart-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/cart</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Add item to cart</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product ID</label>
+                            <input type="number" id="cart-add-product-id" placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="cart-add-quantity" placeholder="1" value="1">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/cart', {
+                        product_id: parseInt(document.getElementById('cart-add-product-id').value),
+                        quantity: parseInt(document.getElementById('cart-add-quantity').value)
+                    }, 'cart-add-response')">Test Add to Cart</button>
+                    <div id="cart-add-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/v1/cart/{item_id}</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Update cart item quantity</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item ID</label>
+                            <input type="number" id="cart-update-item-id" placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="cart-update-quantity" placeholder="2">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('PATCH', '/api/v1/cart/' + document.getElementById('cart-update-item-id').value, {
+                        quantity: parseInt(document.getElementById('cart-update-quantity').value)
+                    }, 'cart-update-response')">Test Update Cart Item</button>
+                    <div id="cart-update-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/v1/cart/{item_id}</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Remove item from cart</div>
+                    <div class="form-group">
+                        <label>Item ID</label>
+                        <input type="number" id="cart-delete-item-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('DELETE', '/api/v1/cart/' + document.getElementById('cart-delete-item-id').value, null, 'cart-delete-response')">Test Delete Cart Item</button>
+                    <div id="cart-delete-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/v1/cart</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Clear entire cart</div>
+                    <button class="btn-test" onclick="testAPI('DELETE', '/api/v1/cart', null, 'cart-clear-response')">Test Clear Cart</button>
+                    <div id="cart-clear-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Favorites Section -->
+            <div id="favorites" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/favorites</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Get user favorites</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/favorites', null, 'favorites-get-response')">Test Get Favorites</button>
+                    <div id="favorites-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/favorites</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Add product to favorites</div>
+                    <div class="form-group">
+                        <label>Product ID</label>
+                        <input type="number" id="favorite-add-product-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/favorites', {
+                        product_id: parseInt(document.getElementById('favorite-add-product-id').value)
+                    }, 'favorite-add-response')">Test Add Favorite</button>
+                    <div id="favorite-add-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/v1/favorites/{product_id}</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Remove product from favorites</div>
+                    <div class="form-group">
+                        <label>Product ID</label>
+                        <input type="number" id="favorite-delete-product-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('DELETE', '/api/v1/favorites/' + document.getElementById('favorite-delete-product-id').value, null, 'favorite-delete-response')">Test Remove Favorite</button>
+                    <div id="favorite-delete-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Brands Section -->
+            <div id="brands" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/brands</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Get all brands</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/brands', null, 'brands-list-response')">Test Get All Brands</button>
+                    <div id="brands-list-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/brands/{id}</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Get brand by ID</div>
+                    <div class="form-group">
+                        <label>Brand ID</label>
+                        <input type="number" id="brand-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/brands/' + document.getElementById('brand-id').value, null, 'brand-get-response')">Test Get Brand</button>
+                    <div id="brand-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/brands/{id}/products</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Get products by brand</div>
+                    <div class="form-group">
+                        <label>Brand ID</label>
+                        <input type="number" id="brand-products-id" placeholder="1">
+                    </div>
+                    <div class="query-params">
+                        <div class="form-group">
+                            <label>Search</label>
+                            <input type="text" id="brand-products-search" placeholder="Search term">
+                        </div>
+                        <div class="form-group">
+                            <label>Min Price</label>
+                            <input type="number" id="brand-products-min-price" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Price</label>
+                            <input type="number" id="brand-products-max-price" placeholder="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Page</label>
+                            <input type="number" id="brand-products-page" placeholder="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Limit</label>
+                            <input type="number" id="brand-products-limit" placeholder="20" value="20">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/brands/' + document.getElementById('brand-products-id').value + '/products?' + buildQueryString({
+                        search: document.getElementById('brand-products-search').value,
+                        min_price: document.getElementById('brand-products-min-price').value,
+                        max_price: document.getElementById('brand-products-max-price').value,
+                        page: document.getElementById('brand-products-page').value,
+                        limit: document.getElementById('brand-products-limit').value
+                    }), null, 'brand-products-response')">Test Get Brand Products</button>
+                    <div id="brand-products-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/brands</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Create new brand</div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="brand-create-name" placeholder="Brand Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="text" id="brand-create-image" placeholder="https://example.com/brand-logo.jpg">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/brands', {
+                        name: document.getElementById('brand-create-name').value,
+                        image: document.getElementById('brand-create-image').value || undefined
+                    }, 'brand-create-response')">Test Create Brand</button>
+                    <div id="brand-create-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/v1/brands/{id}</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Update brand</div>
+                    <div class="form-group">
+                        <label>Brand ID</label>
+                        <input type="number" id="brand-update-id" placeholder="1">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name (optional)</label>
+                            <input type="text" id="brand-update-name" placeholder="New Brand Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL (optional)</label>
+                            <input type="text" id="brand-update-image" placeholder="https://example.com/new-logo.jpg">
+                        </div>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('PATCH', '/api/v1/brands/' + document.getElementById('brand-update-id').value, {
+                        name: document.getElementById('brand-update-name').value || undefined,
+                        image: document.getElementById('brand-update-image').value || undefined
+                    }, 'brand-update-response')">Test Update Brand</button>
+                    <div id="brand-update-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/v1/brands/{id}</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Delete brand</div>
+                    <div class="form-group">
+                        <label>Brand ID</label>
+                        <input type="number" id="brand-delete-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('DELETE', '/api/v1/brands/' + document.getElementById('brand-delete-id').value, null, 'brand-delete-response')">Test Delete Brand</button>
+                    <div id="brand-delete-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Ratings Section -->
+            <div id="ratings" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/products/{product_id}/ratings</span>
+                        <span class="endpoint-access public">Public</span>
+                    </div>
+                    <div class="endpoint-description">Get product ratings with average</div>
+                    <div class="form-group">
+                        <label>Product ID</label>
+                        <input type="number" id="ratings-product-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/products/' + document.getElementById('ratings-product-id').value + '/ratings', null, 'ratings-product-response')">Test Get Product Ratings</button>
+                    <div id="ratings-product-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/ratings</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Add or update product rating</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Product ID</label>
+                            <input type="number" id="rating-create-product-id" placeholder="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Rating (1-5)</label>
+                            <input type="number" id="rating-create-rating" placeholder="5" min="1" max="5">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Comment (optional)</label>
+                        <textarea id="rating-create-comment" placeholder="Your review..."></textarea>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/ratings', {
+                        product_id: parseInt(document.getElementById('rating-create-product-id').value),
+                        rating: parseInt(document.getElementById('rating-create-rating').value),
+                        comment: document.getElementById('rating-create-comment').value || undefined
+                    }, 'rating-create-response')">Test Add Rating</button>
+                    <div id="rating-create-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/ratings/my</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Get my ratings</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/ratings/my', null, 'ratings-my-response')">Test Get My Ratings</button>
+                    <div id="ratings-my-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/v1/ratings/{id}</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Delete rating</div>
+                    <div class="form-group">
+                        <label>Rating ID</label>
+                        <input type="number" id="rating-delete-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('DELETE', '/api/v1/ratings/' + document.getElementById('rating-delete-id').value, null, 'rating-delete-response')">Test Delete Rating</button>
+                    <div id="rating-delete-response" class="response-section"></div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="orders" class="api-section">
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/orders</span>
+                        <span class="endpoint-access user">User/Admin</span>
+                    </div>
+                    <div class="endpoint-description">Get orders (own for users, all for admin)</div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/orders', null, 'orders-get-response')">Test Get Orders</button>
+                    <div id="orders-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/v1/orders/{id}</span>
+                        <span class="endpoint-access user">User/Admin</span>
+                    </div>
+                    <div class="endpoint-description">Get order by ID</div>
+                    <div class="form-group">
+                        <label>Order ID</label>
+                        <input type="number" id="order-id" placeholder="1">
+                    </div>
+                    <button class="btn-test" onclick="testAPI('GET', '/api/v1/orders/' + document.getElementById('order-id').value, null, 'order-get-response')">Test Get Order</button>
+                    <div id="order-get-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/v1/orders</span>
+                        <span class="endpoint-access user">User</span>
+                    </div>
+                    <div class="endpoint-description">Create order from cart</div>
+                    <button class="btn-test" onclick="testAPI('POST', '/api/v1/orders', null, 'order-create-response')">Test Create Order</button>
+                    <div id="order-create-response" class="response-section"></div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="endpoint-header">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/v1/orders/{id}</span>
+                        <span class="endpoint-access admin">Admin Only</span>
+                    </div>
+                    <div class="endpoint-description">Update order status</div>
+                    <div class="form-group">
+                        <label>Order ID</label>
+                        <input type="number" id="order-update-id" placeholder="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="order-update-status">
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <button class="btn-test" onclick="testAPI('PATCH', '/api/v1/orders/' + document.getElementById('order-update-id').value, {
+                        status: document.getElementById('order-update-status').value
+                    }, 'order-update-response')">Test Update Order</button>
+                    <div id="order-update-response" class="response-section"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://api.mohamed-osama.cloud';
+        
+        // Load saved token
+        window.onload = function() {
+            const savedToken = localStorage.getItem('api_token');
+            if (savedToken) {
+                document.getElementById('tokenInput').value = savedToken;
+            }
+        };
+
+        function saveToken() {
+            const token = document.getElementById('tokenInput').value;
+            localStorage.setItem('api_token', token);
+            alert('Token saved successfully!');
+        }
+
+        function clearToken() {
+            localStorage.removeItem('api_token');
+            document.getElementById('tokenInput').value = '';
+            alert('Token cleared!');
+        }
+
+        function getToken() {
+            return localStorage.getItem('api_token') || document.getElementById('tokenInput').value;
+        }
+
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.api-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(section).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function buildQueryString(params) {
+            const query = Object.keys(params)
+                .filter(key => params[key] !== '' && params[key] !== null && params[key] !== undefined)
+                .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
+                .join('&');
+            return query;
+        }
+
+        function cleanObject(obj) {
+            const cleaned = {};
+            for (const key in obj) {
+                if (obj[key] !== '' && obj[key] !== null && obj[key] !== undefined) {
+                    cleaned[key] = obj[key];
+                }
+            }
+            return cleaned;
+        }
+
+        async function testAPI(method, endpoint, body, responseId, autoSaveToken = false) {
+            const responseDiv = document.getElementById(responseId);
+            responseDiv.classList.add('show');
+            responseDiv.innerHTML = '<pre>Loading...</pre>';
+
+            const url = API_BASE + endpoint;
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            const token = getToken();
+            if (token) {
+                options.headers['Authorization'] = 'Bearer ' + token;
+            }
+
+            if (body && (method === 'POST' || method === 'PATCH')) {
+                const cleanedBody = cleanObject(body);
+                if (Object.keys(cleanedBody).length > 0) {
+                    options.body = JSON.stringify(cleanedBody);
+                }
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                
+                const statusClass = response.ok ? 'status-success' : 'status-error';
+                const statusText = response.ok ? '✓ Success' : '✗ Error';
+                
+                responseDiv.innerHTML = `<pre class="${statusClass}">Status: ${response.status} ${response.statusText} (${statusText})\n\n${JSON.stringify(data, null, 2)}</pre>`;
+                
+                // Auto-save token if login/register/refresh
+                if (autoSaveToken && data.access_token) {
+                    localStorage.setItem('api_token', data.access_token);
+                    document.getElementById('tokenInput').value = data.access_token;
+                    responseDiv.innerHTML += '<pre class="status-success">\n✓ Token automatically saved!</pre>';
+                }
+            } catch (error) {
+                responseDiv.innerHTML = `<pre class="status-error">Error: ${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
